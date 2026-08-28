@@ -1,4 +1,4 @@
-# free5GC Cloud-Native Platform
+# free5GC Cloud-Native Platform - Argo CD
 
 Cloud-native deployment of free5GC v4.2.3 on Kubernetes.
 
@@ -40,5 +40,7 @@ PFCP/8805
 Nwu:
 IKE/500
 IKE NAT-T/4500
+
+GitOps verification test
 
 GitOps verification test
