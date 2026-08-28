@@ -1,0 +1,18 @@
+{{- if .Values.nrf.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: nrf
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: free5gc-nrf
+spec:
+  type: ClusterIP
+  selector:
+    app: free5gc-nrf
+  ports:
+    - name: sbi
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+{{- end }}

@@ -1,0 +1,71 @@
+{{- if .Values.nrf.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nrf
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: free5gc-nrf
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: free5gc-nrf
+
+  template:
+    metadata:
+      labels:
+        app: free5gc-nrf
+
+    spec:
+      containers:
+        - name: nrf
+          image: "free5gc/nrf:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          command:
+            - ./nrf
+            - -c
+            - ./config/nrfcfg.yaml
+
+          ports:
+            - name: sbi
+              containerPort: 8000
+              protocol: TCP
+
+          env:
+            - name: DB_URI
+              value: mongodb://mongodb:27017/free5gc
+
+            - name: GIN_MODE
+              value: release
+
+          volumeMounts:
+            - name: nrf-config
+              mountPath: /free5gc/config/nrfcfg.yaml
+              subPath: nrfcfg.yaml
+              readOnly: true
+
+          readinessProbe:
+            httpGet:
+              path: /nnrf-nfm/v1/nf-instances
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+      volumes:
+        - name: nrf-config
+          configMap:
+            name: nrf-config
+{{- end }}
