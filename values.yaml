@@ -1,0 +1,68 @@
+# free5GC Cloud-Native Deployment
+# Application version: v4.2.3
+
+global:
+  namespace: free5gc
+
+image:
+  registry: free5gc
+  tag: v4.2.3
+  pullPolicy: IfNotPresent
+
+mongodb:
+  enabled: true
+  image:
+    repository: mongo
+    tag: "4.4"
+
+amf:
+  enabled: true
+
+smf:
+  enabled: true
+
+upf:
+  enabled: true
+
+nrf:
+  enabled: true
+
+ausf:
+  enabled: true
+
+udm:
+  enabled: true
+
+udr:
+  enabled: true
+
+nssf:
+  enabled: true
+
+pcf:
+  enabled: true
+
+n3iwf:
+  enabled: true
+
+network:
+  metallb:
+    enabled: true
+
+  n2:
+    protocol: SCTP
+    port: 38412
+    loadBalancerIP: 192.168.122.230
+
+  nwu:
+    ikePort: 500
+    natTraversalPort: 4500
+
+storage:
+  storageClass: nfs-storage-retain
+
+placement:
+  computeNodes:
+    - k8s-worker1
+    - k8s-worker2
+  storageNode: k8s-worker3
