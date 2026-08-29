@@ -41,7 +41,7 @@ configuration:
   pfcp: # the IP address of N4 interface on this SMF (PFCP)
     # addr config is deprecated in smf config v1.0.3, please use the following config
     nodeID: smf # the Node ID of this SMF
-    listenAddr: smf # the IP/FQDN of N4 interface on this SMF (PFCP)
+    listenAddr: 0.0.0.0 # the IP/FQDN of N4 interface on this SMF (PFCP)
     externalAddr: smf # the IP/FQDN of N4 interface on this SMF (PFCP)
   userplaneInformation: # list of userplane information
     upNodes: # information of userplane node (AN or UPF)
