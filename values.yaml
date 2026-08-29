@@ -57,7 +57,7 @@ network:
   n3:
     protocol: UDP
     port: 2152
-    loadBalancerIP: 192.168.122.231
+    loadBalancerIP: 192.168.122.232
 
   nwu:
     ikePort: 500
