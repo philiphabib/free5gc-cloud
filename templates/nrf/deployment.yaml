@@ -48,8 +48,7 @@ spec:
               readOnly: true
 
           readinessProbe:
-            httpGet:
-              path: /nnrf-nfm/v1/nf-instances
+            tcpSocket:
               port: 8000
             initialDelaySeconds: 10
             periodSeconds: 10
