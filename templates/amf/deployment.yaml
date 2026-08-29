@@ -1,0 +1,72 @@
+{{- if .Values.amf.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: amf
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: free5gc-amf
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: free5gc-amf
+
+  template:
+    metadata:
+      labels:
+        app: free5gc-amf
+
+    spec:
+      containers:
+        - name: amf
+          image: "free5gc/amf:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          command:
+            - ./amf
+            - -c
+            - ./config/amfcfg.yaml
+
+          ports:
+            - name: sbi
+              containerPort: 8000
+              protocol: TCP
+
+            - name: ngap
+              containerPort: 38412
+              protocol: SCTP
+
+          env:
+            - name: GIN_MODE
+              value: release
+
+          volumeMounts:
+            - name: amf-config
+              mountPath: /free5gc/config/amfcfg.yaml
+              subPath: amfcfg.yaml
+              readOnly: true
+
+          readinessProbe:
+            httpGet:
+              path: /namf-comm/v1/ue-contexts
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+      volumes:
+        - name: amf-config
+          configMap:
+            name: amf-config
+{{- end }}

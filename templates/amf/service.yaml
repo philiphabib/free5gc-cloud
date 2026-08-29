@@ -1,0 +1,24 @@
+{{- if .Values.amf.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: amf
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: free5gc-amf
+spec:
+  type: LoadBalancer
+  selector:
+    app: free5gc-amf
+
+  ports:
+    - name: sbi
+      port: 8000
+      targetPort: 8000
+      protocol: TCP
+
+    - name: ngap
+      port: 38412
+      targetPort: 38412
+      protocol: SCTP
+{{- end }}
