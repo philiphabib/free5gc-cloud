@@ -1,3 +1,4 @@
+{{- if .Values.smf.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,3 +7,6 @@ metadata:
 data:
   smfcfg.yaml: |
 {{ .Files.Get "config/smfcfg.yaml" | indent 4 }}
+  uerouting.yaml: |
+{{ .Files.Get "config/uerouting.yaml" | indent 4 }}
+{{- end }}

@@ -1,3 +1,4 @@
+{{- if .Values.smf.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -7,34 +8,49 @@ metadata:
     app: free5gc-smf
 spec:
   replicas: 1
+
   selector:
     matchLabels:
       app: free5gc-smf
+
   template:
     metadata:
       labels:
         app: free5gc-smf
+
     spec:
       containers:
         - name: smf
-          image: free5gc/smf:v4.2.3
-          imagePullPolicy: IfNotPresent
+          image: {{ .Values.image.registry }}/smf:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
           command:
             - ./smf
             - -c
             - ./config/smfcfg.yaml
+            - -u
+            - ./config/uerouting.yaml
+
           ports:
             - name: sbi
               containerPort: 8000
               protocol: TCP
+
           env:
             - name: GIN_MODE
               value: release
+
           volumeMounts:
-            - name: config
+            - name: smf-config
               mountPath: /free5gc/config/smfcfg.yaml
               subPath: smfcfg.yaml
               readOnly: true
+
+            - name: smf-config
+              mountPath: /free5gc/config/uerouting.yaml
+              subPath: uerouting.yaml
+              readOnly: true
+
           readinessProbe:
             tcpSocket:
               port: 8000
@@ -42,6 +58,7 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 6
+
           livenessProbe:
             tcpSocket:
               port: 8000
@@ -49,7 +66,9 @@ spec:
             periodSeconds: 20
             timeoutSeconds: 3
             failureThreshold: 6
+
       volumes:
-        - name: config
+        - name: smf-config
           configMap:
             name: smf-config
+{{- end }}

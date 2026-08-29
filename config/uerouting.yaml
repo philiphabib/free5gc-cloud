@@ -1,0 +1,15 @@
+info:
+  version: 1.0.7
+  description: Routing information for UE
+
+ueRoutingInfo:
+  UE1:
+    members:
+      - imsi-208930000007487
+    topology:
+      - A: gNB1
+        B: UPF
+
+routeProfile: {}
+
+pfdDataForApp: []
