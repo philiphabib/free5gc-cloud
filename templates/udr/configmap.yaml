@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: udr-config
+  namespace: {{ .Release.Namespace }}
+data:
+  udrcfg.yaml: |
+{{ .Files.Get "config/udrcfg.yaml" | indent 4 }}

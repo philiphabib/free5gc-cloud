@@ -54,6 +54,11 @@ network:
     port: 38412
     loadBalancerIP: 192.168.122.230
 
+  n3:
+    protocol: UDP
+    port: 2152
+    loadBalancerIP: 192.168.122.231
+
   nwu:
     ikePort: 500
     natTraversalPort: 4500

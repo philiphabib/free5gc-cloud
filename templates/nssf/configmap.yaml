@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nssf-config
+  namespace: {{ .Release.Namespace }}
+data:
+  nssfcfg.yaml: |
+{{ .Files.Get "config/nssfcfg.yaml" | indent 4 }}

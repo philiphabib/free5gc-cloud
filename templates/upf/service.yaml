@@ -1,0 +1,36 @@
+{{- if .Values.upf.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: upf
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: free5gc-upf
+spec:
+  type: ClusterIP
+  selector:
+    app: free5gc-upf
+  ports:
+    - name: pfcp
+      port: 8805
+      targetPort: 8805
+      protocol: UDP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: upf-n3
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: free5gc-upf
+spec:
+  type: LoadBalancer
+  loadBalancerIP: {{ .Values.network.n3.loadBalancerIP }}
+  selector:
+    app: free5gc-upf
+  ports:
+    - name: gtpu
+      port: 2152
+      targetPort: 2152
+      protocol: UDP
+{{- end }}

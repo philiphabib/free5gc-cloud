@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smf-config
+  namespace: {{ .Release.Namespace }}
+data:
+  smfcfg.yaml: |
+{{ .Files.Get "config/smfcfg.yaml" | indent 4 }}

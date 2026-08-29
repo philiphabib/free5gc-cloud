@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ausf
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: free5gc-ausf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: free5gc-ausf
+  template:
+    metadata:
+      labels:
+        app: free5gc-ausf
+    spec:
+      containers:
+        - name: ausf
+          image: free5gc/ausf:v4.2.3
+          imagePullPolicy: IfNotPresent
+          command:
+            - ./ausf
+            - -c
+            - ./config/ausfcfg.yaml
+          ports:
+            - name: sbi
+              containerPort: 8000
+              protocol: TCP
+          env:
+            - name: GIN_MODE
+              value: release
+          volumeMounts:
+            - name: config
+              mountPath: /free5gc/config/ausfcfg.yaml
+              subPath: ausfcfg.yaml
+              readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 6
+      volumes:
+        - name: config
+          configMap:
+            name: ausf-config

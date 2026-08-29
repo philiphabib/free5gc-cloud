@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upf
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: free5gc-upf
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: free5gc-upf
+
+  template:
+    metadata:
+      labels:
+        app: free5gc-upf
+
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k8s-worker1
+
+      containers:
+        - name: upf
+          image: "{{ .Values.image.registry }}/upf:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          command:
+            - ./upf
+            - -c
+            - ./config/upfcfg.yaml
+
+          securityContext:
+            privileged: true
+
+          ports:
+            - name: pfcp
+              containerPort: 8805
+              protocol: UDP
+
+            - name: gtpu
+              containerPort: 2152
+              protocol: UDP
+
+          volumeMounts:
+            - name: upf-config
+              mountPath: /free5gc/config/upfcfg.yaml
+              subPath: upfcfg.yaml
+              readOnly: true
+
+            - name: dev-net-tun
+              mountPath: /dev/net/tun
+
+          readinessProbe:
+            tcpSocket:
+              port: 8805
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+          livenessProbe:
+            tcpSocket:
+              port: 8805
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 6
+
+      volumes:
+        - name: upf-config
+          configMap:
+            name: upf-config
+
+        - name: dev-net-tun
+          hostPath:
+            path: /dev/net/tun
+            type: CharDevice
