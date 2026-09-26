@@ -10,7 +10,7 @@ data:
       description: N3IWF initial local configuration
 
     configuration:
-      N3IWFInformation:
+      N3IWFInfo:
         GlobalN3IWFID:
           PLMNID:
             MCC: 208
@@ -27,31 +27,22 @@ data:
                   - SNSSAI:
                       SST: 1
                       SD: 010203
-      
-      # --- CRITICAL: Use the AMF ClusterIP, not a DNS name ---
+
       AMFSCTPAddresses:
         - IP:
-            - 10.108.147.110  # <-- REPLACE with actual ClusterIP from kubectl
+            - 10.108.147.110
           Port: 38412
-      
-      NASTCPPort: 20000
-      IKEBindAddress: 192.168.122.231
-      IPSecTunnelAddress: 10.200.200.1
+
+      TCPPort: 20000
+      IKEBindAddr: 192.168.122.231
+      IPSecGatewayAddr: 192.168.122.231
+      N3IWFGTPBindAddress: 192.168.122.232
       UEIPAddressRange: 10.200.200.0/24
-      XFRMInterfaceName: xfrmi
-      XFRMInterfaceID: 1
-      GTPBindAddress: 192.168.122.232
       FQDN: n3iwf.free5gc.org
-      
-      # --- Required Security and Liveness fields ---
-      privateKey: ./cert/n3iwf.key
-      certificateAuthority: ./cert/n3iwf.pem
-      certificate: ./cert/n3iwf.pem
-      
-      livenessCheck:
-        enable: true
-        maxRetryTimes: 4
-        transFreq: 60s
+
+      Cert:
+        PEM: cert/n3iwf.pem
+        Key: cert/n3iwf.key
 
     logger:
       enable: true
