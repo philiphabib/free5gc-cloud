@@ -39,11 +39,11 @@ data:
       N3IWFGTPBindAddress: 192.168.122.232
       UEIPAddressRange: 10.200.200.0/24
       FQDN: n3iwf.free5gc.org
-      # Liveness check (REQUIRED per the error)
-      LivenessCheck:
-        Enable: true
-        TransFreq: 60s
-        MaxRetryTimes: 4
+
+      livenessCheck:
+        enable: true
+        transFreq: 60s
+        maxRetryTimes: 4
 
       Cert:
         PEM: cert/n3iwf.pem
