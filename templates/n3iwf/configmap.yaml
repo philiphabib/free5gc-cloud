@@ -10,7 +10,7 @@ data:
       description: N3IWF initial local configuration
 
     configuration:
-      N3IWFInfo:
+      N3IWFInformation:
         GlobalN3IWFID:
           PLMNID:
             MCC: 208
@@ -32,12 +32,13 @@ data:
         - IP:
             - 10.108.147.110
           Port: 38412
+      NASTCPPort: 20000
 
-      TCPPort: 20000
-      IKEBindAddr: 192.168.122.231
-      IPSecGatewayAddr: 192.168.122.231
-      N3IWFGTPBindAddress: 192.168.122.232
+      IKEBindAddress: 192.168.122.231
+      IPSecTunnelAddress: 10.200.200.1
       UEIPAddressRange: 10.200.200.0/24
+
+      GTPBindAddress: 192.168.122.232
       FQDN: n3iwf.free5gc.org
 
       LivenessCheck:
