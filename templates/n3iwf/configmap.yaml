@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: n3iwf-config
+  namespace: {{ .Values.global.namespace }}
+data:
+  n3iwfcfg.yaml: |
+    info:
+      version: 1.0.5
+      description: N3IWF initial local configuration
+
+    configuration:
+      N3IWFInformation:
+        GlobalN3IWFID:
+          PLMNID:
+            MCC: 208
+            MNC: 93
+          N3IWFID: 135
+        Name: free5GC_N3IWF
+        SupportedTAList:
+          - TAC: 000001
+            BroadcastPLMNList:
+              - PLMNID:
+                  MCC: 208
+                  MNC: 93
+                TAISliceSupportList:
+                  - SNSSAI:
+                      SST: 1
+                      SD: 010203
+
+      # --- N2 Interface: N3IWF connects to AMF via SCTP ---
+      AMFSCTPAddresses:
+        - IP:
+            - amf  # Kubernetes service name for AMF
+          Port: 38412
+      NASTCPPort: 20000
+
+      # --- Nwu Interface: IKE/IPsec bind address (must be on the nwu network) ---
+      IKEBindAddress: 192.168.122.231  # Reserve this IP from MetalLB pool
+
+      # --- IPSec Tunnel Configuration ---
+      IPSecTunnelAddress: 10.200.200.1
+      UEIPAddressRange: 10.200.200.0/24
+      XFRMInterfaceName: xfrmi
+      XFRMInterfaceID: 1
+
+      # --- N3 Interface: N3IWF connects to UPF via GTP-U ---
+      GTPBindAddress: 192.168.122.232  # Same as UPF's N3 Multus IP
+
+      FQDN: n3iwf.free5gc.org
+
+      # --- Security Certificates (mount from secret) ---
+      privateKey: ./cert/n3iwf.key
+      certificateAuthority: ./cert/n3iwf.pem
+      certificate: ./cert/n3iwf.pem
+
+    logger:
+      enable: true
+      level: info
+      reportCaller: false

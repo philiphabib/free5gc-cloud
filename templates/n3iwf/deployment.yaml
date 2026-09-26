@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n3iwf
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: free5gc-n3iwf
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: free5gc-n3iwf
+  template:
+    metadata:
+      labels:
+        app: free5gc-n3iwf
+      annotations:
+        # Attach the N3IWF pod to the Multus network for Nwu interface
+        k8s.v1.cni.cncf.io/networks: '[{"name":"n3iwf-nwu","ips":["192.168.122.231/24"]}]'
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k8s-worker1
+      containers:
+        - name: n3iwf
+          image: "free5gc/n3iwf:v4.2.3"
+          imagePullPolicy: IfNotPresent
+          command:
+            - ./n3iwf
+            - -c
+            - ./config/n3iwfcfg.yaml
+          securityContext:
+            privileged: true   # Required to create VTI/IPsec interfaces
+            capabilities:
+              add:
+                - NET_ADMIN
+          ports:
+            - name: ike
+              containerPort: 500
+              protocol: UDP
+            - name: ike-natt
+              containerPort: 4500
+              protocol: UDP
+            - name: gtpu
+              containerPort: 2152
+              protocol: UDP
+          volumeMounts:
+            - name: n3iwf-config
+              mountPath: /free5gc/config/n3iwfcfg.yaml
+              subPath: n3iwfcfg.yaml
+              readOnly: true
+            - name: n3iwf-certs
+              mountPath: /free5gc/cert
+              readOnly: true
+      volumes:
+        - name: n3iwf-config
+          configMap:
+            name: n3iwf-config
+        - name: n3iwf-certs
+          secret:
+            secretName: n3iwf-certs
