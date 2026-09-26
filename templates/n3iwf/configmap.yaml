@@ -40,7 +40,7 @@ data:
       UEIPAddressRange: 10.200.200.0/24
       FQDN: n3iwf.free5gc.org
 
-      livenessCheck:
+      LivenessCheck:
         enable: true
         transFreq: 60s
         maxRetryTimes: 4
