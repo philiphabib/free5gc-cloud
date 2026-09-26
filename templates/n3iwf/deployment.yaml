@@ -17,7 +17,6 @@ spec:
       labels:
         app: free5gc-n3iwf
       annotations:
-        # Attach the N3IWF pod to the Multus network for Nwu interface
         k8s.v1.cni.cncf.io/networks: '[{"name":"n3iwf-nwu","ips":["192.168.122.231/24"]}]'
     spec:
       nodeSelector:
@@ -27,11 +26,16 @@ spec:
           image: "free5gc/n3iwf:v4.2.3"
           imagePullPolicy: IfNotPresent
           command:
-            - ./n3iwf
+            - /bin/sh
             - -c
-            - ./config/n3iwfcfg.yaml
+            - |
+              set -x
+              ls -la /free5gc/bin/ 2>/dev/null || true
+              ls -la /free5gc/ 2>/dev/null || true
+              which n3iwf 2>/dev/null || true
+              /free5gc/bin/n3iwf -c /free5gc/config/n3iwfcfg.yaml
           securityContext:
-            privileged: true   # Required to create VTI/IPsec interfaces
+            privileged: true
             capabilities:
               add:
                 - NET_ADMIN
