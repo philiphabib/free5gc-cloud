@@ -10,43 +10,44 @@ data:
       description: N3IWF initial local configuration
 
     configuration:
-      N3IWFInformation:
-        GlobalN3IWFID:
-          PLMNID:
-            MCC: 208
-            MNC: 93
-          N3IWFID: 135
-        Name: free5GC_N3IWF
-        SupportedTAList:
-          - TAC: 000001
-            BroadcastPLMNList:
-              - PLMNID:
-                  MCC: 208
-                  MNC: 93
-                TAISliceSupportList:
-                  - SNSSAI:
-                      SST: 1
-                      SD: 010203
+      n3iwfInformation:
+        globalN3IWFID:
+          plmnID:
+            mcc: "208"
+            mnc: "93"
+          n3iwfID: 135
+        name: free5GC_N3IWF
+        supportedTAList:
+          - tac: "000001"
+            broadcastPlmnList:
+              - plmnID:
+                  mcc: "208"
+                  mnc: "93"
+                taiSliceSupportList:
+                  - snssai:
+                      sst: 1
+                      sd: "010203"
 
-      AMFSCTPAddresses:
-        - IP: 10.108.147.110
-      NASTCPPort: 20000
+      amfSCTPAddresses:
+        - ip:
+            - "10.108.147.110"
+          port: 38412
 
-      IKEBindAddress: 192.168.122.231
-      IPSecTunnelAddress: 10.200.200.1
-      UEIPAddressRange: 10.200.200.0/24
-
-      GTPBindAddress: 192.168.122.232
-      FQDN: n3iwf.free5gc.org
-
-      LivenessCheck:
+      nasTcpPort: 20000
+      ikeBindAddress: "192.168.122.231"
+      ipSecTunnelAddress: "10.200.200.1"
+      n3iwfGtpBindAddress: "192.168.122.232"
+      ueIpAddressRange: "10.200.200.0/24"
+      fqdn: "n3iwf.free5gc.org"
+      xfrmInterfaceName: "xfrmi"
+      xfrmInterfaceID: 1
+      privateKey: "/free5gc/cert/n3iwf.key"
+      certificateAuthority: "/free5gc/cert/n3iwf.pem"
+      certificate: "/free5gc/cert/n3iwf.pem"
+      livenessCheck:
         enable: true
         transFreq: 60s
         maxRetryTimes: 4
-
-      Cert:
-        PEM: cert/n3iwf.pem
-        Key: cert/n3iwf.key
 
     logger:
       enable: true
