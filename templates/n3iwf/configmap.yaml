@@ -27,32 +27,31 @@ data:
                   - SNSSAI:
                       SST: 1
                       SD: 010203
-
-      # --- N2 Interface: N3IWF connects to AMF via SCTP ---
+      
+      # --- CRITICAL: Use the AMF ClusterIP, not a DNS name ---
       AMFSCTPAddresses:
         - IP:
-            - 10.108.147.110  # Kubernetes service name for AMF
+            - 10.108.147.110  # <-- REPLACE with actual ClusterIP from kubectl
           Port: 38412
+      
       NASTCPPort: 20000
-
-      # --- Nwu Interface: IKE/IPsec bind address (must be on the nwu network) ---
-      IKEBindAddress: 192.168.122.231  # Reserve this IP from MetalLB pool
-
-      # --- IPSec Tunnel Configuration ---
+      IKEBindAddress: 192.168.122.231
       IPSecTunnelAddress: 10.200.200.1
       UEIPAddressRange: 10.200.200.0/24
       XFRMInterfaceName: xfrmi
       XFRMInterfaceID: 1
-
-      # --- N3 Interface: N3IWF connects to UPF via GTP-U ---
-      GTPBindAddress: 192.168.122.232  # Same as UPF's N3 Multus IP
-
+      GTPBindAddress: 192.168.122.232
       FQDN: n3iwf.free5gc.org
-
-      # --- Security Certificates (mount from secret) ---
+      
+      # --- Required Security and Liveness fields ---
       privateKey: ./cert/n3iwf.key
       certificateAuthority: ./cert/n3iwf.pem
       certificate: ./cert/n3iwf.pem
+      
+      livenessCheck:
+        enable: true
+        maxRetryTimes: 4
+        transFreq: 60s
 
     logger:
       enable: true
