@@ -25,6 +25,10 @@ spec:
         - name: n3iwf
           image: "free5gc/n3iwf:v4.2.3"
           imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - "./n3iwf-ipsec.sh && ./n3iwf -c ./config/n3iwfcfg.yaml"
           # ▼▼▼ REMOVE THE command: BLOCK ENTIRELY ▼▼▼
           securityContext:
             privileged: true

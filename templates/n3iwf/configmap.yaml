@@ -31,7 +31,7 @@ data:
       # --- N2 Interface: N3IWF connects to AMF via SCTP ---
       AMFSCTPAddresses:
         - IP:
-            - amf  # Kubernetes service name for AMF
+            - 10.108.147.110  # Kubernetes service name for AMF
           Port: 38412
       NASTCPPort: 20000
 
