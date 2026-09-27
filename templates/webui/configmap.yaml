@@ -20,7 +20,17 @@ data:
         ipv4Address: 0.0.0.0
         port: 5000
       billingServer:
-        enable: false    # disabled — we don't need the CHF billing integration
+        enable: false
+        hostIPv4: 0.0.0.0
+        listenPort: 2122
+        portRange:
+          start: 2123
+          end: 2130
+        basePath: /tmp/webconsole
+        port: 2121
+        tls:
+          pem: cert/chf.pem
+          key: cert/chf.key
 
     logger:
       enable: true
