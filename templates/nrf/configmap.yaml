@@ -28,7 +28,7 @@ data:
           pem: cert/root.pem
           key: cert/root.key
 
-        oauth: true
+        oauth: false
 
       DefaultPlmnId:
         mcc: 208
