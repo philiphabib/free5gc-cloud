@@ -20,7 +20,7 @@ data:
         ipv4Address: 0.0.0.0
         port: 5000
       billingServer:
-        enable: false
+        enable: true         # ← was false, must be true for validator
         hostIPv4: 0.0.0.0
         listenPort: 2122
         portRange:
