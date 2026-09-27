@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webui
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: free5gc-webui
+spec:
+  type: LoadBalancer    # MetalLB assigns an IP from the pool
+  selector:
+    app: free5gc-webui
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      protocol: TCP

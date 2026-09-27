@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webui
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: free5gc-webui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: free5gc-webui
+  template:
+    metadata:
+      labels:
+        app: free5gc-webui
+    spec:
+      initContainers:
+        - name: wait-mongo
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - "until nc -z mongodb 27017; do echo waiting for MongoDB; sleep 2; done;"
+      containers:
+        - name: webui
+          image: "free5gc/webui:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - "/sbin/tini"
+            - "--"
+            - "./webui"
+          args:
+            - "-c"
+            - "./config/webuicfg.yaml"
+          env:
+            - name: GIN_MODE
+              value: release
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          volumeMounts:
+            - name: webui-config
+              mountPath: /free5gc/config
+              readOnly: true
+            - name: free5gc-certs
+              mountPath: /free5gc/cert
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 6
+      volumes:
+        - name: webui-config
+          configMap:
+            name: webui-config
+        - name: free5gc-certs
+          secret:
+            secretName: free5gc-certs
