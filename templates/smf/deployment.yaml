@@ -51,6 +51,9 @@ spec:
               subPath: uerouting.yaml
               readOnly: true
 
+            - name: free5gc-certs
+              mountPath: /free5gc/cert
+              readOnly: true
           readinessProbe:
             tcpSocket:
               port: 8000
@@ -72,3 +75,6 @@ spec:
           configMap:
             name: smf-config
 {{- end }}
+        - name: free5gc-certs
+          secret:
+            secretName: free5gc-certs

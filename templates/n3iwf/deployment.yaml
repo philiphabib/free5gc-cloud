@@ -36,7 +36,6 @@ spec:
               ip addr add 10.200.200.1/24 dev ipsec0 2>/dev/null || true
               ip link set dev ipsec0 up
               exec ./n3iwf -c ./config/n3iwfcfg.yaml
-          # ▼▼▼ REMOVE THE command: BLOCK ENTIRELY ▼▼▼
           securityContext:
             privileged: true
             capabilities:
@@ -57,13 +56,13 @@ spec:
               mountPath: /free5gc/config/n3iwfcfg.yaml
               subPath: n3iwfcfg.yaml
               readOnly: true
-            - name: n3iwf-certs
+            - name: free5gc-certs
               mountPath: /free5gc/cert
               readOnly: true
       volumes:
         - name: n3iwf-config
           configMap:
             name: n3iwf-config
-        - name: n3iwf-certs
+        - name: free5gc-certs
           secret:
-            secretName: n3iwf-certs
+            secretName: free5gc-certs
