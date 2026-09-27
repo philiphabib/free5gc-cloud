@@ -35,6 +35,9 @@ spec:
               mountPath: /free5gc/config/pcfcfg.yaml
               subPath: pcfcfg.yaml
               readOnly: true
+            - name: free5gc-certs
+              mountPath: /free5gc/cert
+              readOnly: true
           readinessProbe:
             tcpSocket:
               port: 8000
@@ -53,3 +56,6 @@ spec:
         - name: config
           configMap:
             name: pcf-config
+        - name: free5gc-certs
+          secret:
+            secretName: free5gc-certs

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: free5gc-certs
+  namespace: {{ .Values.global.namespace }}
+type: Opaque
+data:
+{{- $root := . }}
+{{- range $path, $_ := .Files.Glob "cert/*.pem" }}
+  {{ base $path }}: {{ $root.Files.Get $path | b64enc }}
+{{- end }}
+{{- range $path, $_ := .Files.Glob "cert/*.key" }}
+  {{ base $path }}: {{ $root.Files.Get $path | b64enc }}
+{{- end }}
