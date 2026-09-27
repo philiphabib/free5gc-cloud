@@ -8,48 +8,54 @@ metadata:
     app: free5gc-nrf
 spec:
   replicas: 1
-
   selector:
     matchLabels:
       app: free5gc-nrf
-
   template:
     metadata:
       labels:
         app: free5gc-nrf
-
     spec:
+      initContainers:
+        - name: cert-seed
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              cp -L /certs-source/* /free5gc/cert/ 2>/dev/null || true
+              chmod 0644 /free5gc/cert/* 2>/dev/null || true
+              echo "Seeded certs:" && ls -la /free5gc/cert/
+          volumeMounts:
+            - name: certs-writable
+              mountPath: /free5gc/cert
+            - name: free5gc-certs
+              mountPath: /certs-source
+              readOnly: true
       containers:
         - name: nrf
           image: "free5gc/nrf:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-
           command:
             - ./nrf
             - -c
             - ./config/nrfcfg.yaml
-
           ports:
             - name: sbi
               containerPort: 8000
               protocol: TCP
-
           env:
             - name: DB_URI
               value: mongodb://mongodb:27017/free5gc
-
             - name: GIN_MODE
               value: release
-
           volumeMounts:
             - name: nrf-config
               mountPath: /free5gc/config/nrfcfg.yaml
               subPath: nrfcfg.yaml
               readOnly: true
-
-            - name: free5gc-certs
+            - name: certs-writable
               mountPath: /free5gc/cert
-              readOnly: true
           readinessProbe:
             tcpSocket:
               port: 8000
@@ -57,7 +63,6 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 6
-
           livenessProbe:
             tcpSocket:
               port: 8000
@@ -65,12 +70,13 @@ spec:
             periodSeconds: 20
             timeoutSeconds: 3
             failureThreshold: 6
-
       volumes:
         - name: nrf-config
           configMap:
             name: nrf-config
-{{- end }}
+        - name: certs-writable
+          emptyDir: {}
         - name: free5gc-certs
           secret:
             secretName: free5gc-certs
+{{- end }}

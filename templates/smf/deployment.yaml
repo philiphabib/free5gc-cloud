@@ -74,7 +74,7 @@ spec:
         - name: smf-config
           configMap:
             name: smf-config
-{{- end }}
         - name: free5gc-certs
           secret:
             secretName: free5gc-certs
+{{- end }}
