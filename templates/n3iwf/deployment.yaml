@@ -31,6 +31,10 @@ spec:
             - |
               ip xfrm state flush 2>/dev/null || true
               ip xfrm policy flush 2>/dev/null || true
+              # Remove stale XFRM interfaces from the pod network namespace
+              for iface in $(ip -o link show type xfrm 2>/dev/null | awk -F': ' '{print $2}' | cut -d'@' -f1); do
+                ip link del "$iface" 2>/dev/null || true
+              done
               exec ./n3iwf -c ./config/n3iwfcfg.yaml
           securityContext:
             privileged: true
