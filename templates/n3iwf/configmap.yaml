@@ -36,7 +36,7 @@ data:
       nasTcpPort: 20000
       ikeBindAddress: "192.168.122.231"
       ipSecTunnelAddress: "10.200.200.1"
-      n3iwfGtpBindAddress: "192.168.122.232"
+      n3iwfGtpBindAddress: "192.168.122.231"
       ueIpAddressRange: "10.200.200.0/24"
       fqdn: "n3iwf.free5gc.org"
       xfrmInterfaceName: "xfrmi"
