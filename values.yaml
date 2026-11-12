@@ -42,6 +42,12 @@ nssf:
 pcf:
   enabled: true
 
+webui:
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: true
+    host: free5gc.lab.local
 n3iwf:
   enabled: true
 

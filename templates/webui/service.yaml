@@ -6,7 +6,7 @@ metadata:
   labels:
     app: free5gc-webui
 spec:
-  type: LoadBalancer    # MetalLB assigns an IP from the pool
+  type: {{ .Values.webui.service.type | default "ClusterIP" }}
   selector:
     app: free5gc-webui
   ports:
