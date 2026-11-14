@@ -40,6 +40,8 @@ metadata:
     app: free5gc-mongodb
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: free5gc-mongodb
