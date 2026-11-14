@@ -18,3 +18,7 @@ Thumbs.db
 
 # Generated files
 *.log
+
+# Certificates and keys (managed as a Kubernetes Secret)
+cert/
+*.key
